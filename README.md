@@ -1,20 +1,20 @@
 # Hex64 App
 
-一个现代化的网页应用框架，使用 React + Vite 构建，支持生成 iOS 和 Android 原生应用。
+一个现代化的移动应用，使用 React Native 和 Expo 构建，支持 iOS 和 Android 原生平台。
 
 ## 特性
 
-- 🚀 **快速开发** - Vite 提供毫秒级热更新
-- 📱 **跨平台** - 一套代码，生成 iOS 和 Android 应用
-- 🛣️ **路由管理** - 内置 React Router 路由系统
+- 📱 **跨平台** - 一套代码，支持 iOS 和 Android
+- 🚀 **快速开发** - Expo 提供流畅的开发体验
+- 🛣️ **文件系统路由** - 使用 expo-router 基于文件系统的路由
 - 🎨 **现代 UI** - 精心设计的深色主题界面
 
 ## 技术栈
 
-- React 18
-- Vite 5
-- React Router v6
-- Capacitor 6 - 跨平台应用封装
+- React Native 0.76.5
+- Expo SDK 52
+- TypeScript
+- expo-router - 文件系统路由
 
 ## 开始使用
 
@@ -27,90 +27,47 @@ npm install
 ### 启动开发服务器
 
 ```bash
-npm run dev
+npx expo start
 ```
 
-访问 http://localhost:5173 查看应用。
+### 运行应用
 
-### 构建生产版本
+- **iOS 模拟器**: 按 `i` 键
+- **Android 模拟器**: 按 `a` 键
+- **Web**: 按 `w` 键
 
-```bash
-npm run build
-```
-
-### 预览生产版本
-
-```bash
-npm run preview
-```
-
-## 生成原生应用
-
-### 添加平台
-
-```bash
-# 添加 iOS 平台（需要 macOS 和 Xcode）
-npx cap add ios
-
-# 添加 Android 平台
-npx cap add android
-```
-
-### 同步 Web 内容到原生项目
-
-```bash
-npx cap sync
-```
-
-### 打开原生 IDE
-
-```bash
-# 打开 Xcode（macOS）
-npx cap open ios
-
-# 打开 Android Studio
-npx cap open android
-```
-
-### 构建应用
+### 构建原生应用
 
 #### iOS（需要 macOS）
 
-1. 确保已安装 Xcode 和 CocoaPods
-2. 运行 `npx cap open ios` 打开 Xcode
-3. 选择模拟器或连接设备
-4. 点击运行
+```bash
+npx expo run:ios
+```
 
 #### Android
 
-1. 确保已安装 Android Studio 和 JDK
-2. 运行 `npx cap open android` 打开 Android Studio
-3. 选择模拟器或连接设备
-4. 点击运行，或使用命令行：
-
 ```bash
-cd android
-./gradlew assembleDebug
+npx expo run:android
 ```
-
-安装 APK：`adb install android/app/build/outputs/apk/debug/app-debug.apk`
 
 ## 项目结构
 
 ```
 hex64/
-├── index.html              # 入口 HTML 文件
-├── package.json            # 项目配置和依赖
-├── capacitor.config.ts     # Capacitor 配置
-├── vite.config.js          # Vite 配置
-├── .gitignore              # Git 忽略文件
-├── android/                # Android 原生项目
-├── ios/                    # iOS 原生项目
-└── src/
-    ├── main.jsx            # React 入口文件
-    ├── App.jsx             # 主应用组件
-    ├── App.css             # 应用样式
-    └── index.css           # 全局样式
+├── app/                    # 页面路由（expo-router）
+│   ├── _layout.tsx         # 根布局
+│   ├── index.tsx           # 首页
+│   ├── dashboard.tsx       # 控制面板
+│   └── about.tsx           # 关于页面
+├── assets/                 # 静态资源
+│   ├── icon.png            # 应用图标
+│   ├── splash-icon.png     # 启动画面
+│   └── adaptive-icon.png   # Android 自适应图标
+├── app.json               # Expo 配置
+├── package.json           # 项目配置和依赖
+├── tsconfig.json          # TypeScript 配置
+├── babel.config.js        # Babel 配置
+└── README.md              # 项目文档
 ```
 
 ## 页面路由
@@ -119,23 +76,19 @@ hex64/
 - `/dashboard` - 控制面板
 - `/about` - 关于我们
 
+## Expo Go
+
+开发阶段可以使用 Expo Go 快速预览应用：
+
+1. 手机安装 Expo Go（App Store / Google Play）
+2. 扫描终端显示的二维码
+3. 即时预览更新
+
 ## 自定义
 
-可以根据需要修改以下文件来定制你的应用：
-
-- `src/App.jsx` - 修改页面和路由
-- `src/App.css` - 自定义样式
-- `src/index.css` - 全局样式和主题
-- `capacitor.config.ts` - 应用名称、图标等配置
-
-## Capacitor 插件
-
-已集成以下插件：
-
-- `@capacitor/app` - 应用生命周期管理
-- `@capacitor/haptics` - 触觉反馈
-- `@capacitor/keyboard` - 键盘控制
-- `@capacitor/status-bar` - 状态栏控制
+- 修改 `app.json` 更改应用名称、图标等配置
+- 修改 `app/` 目录下的文件来自定义页面
+- 修改 `assets/` 目录下的图片来自定义图标
 
 ## 许可证
 
