@@ -1,137 +1,232 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default function Home() {
+export default function BaziPage() {
+  const pillars = [
+    { name: '年柱', ganZhi: '丙午', wuxing: '火火', color: '#d97706' },
+    { name: '月柱', ganZhi: '庚寅', wuxing: '金木', color: '#16a34a' },
+    { name: '日柱', ganZhi: '庚子', wuxing: '金水', color: '#2563eb' },
+    { name: '时柱', ganZhi: '辛巳', wuxing: '金火', color: '#d97706' },
+  ];
+
+  const wuxingData = [
+    { name: '金', value: 85 },
+    { name: '木', value: 40 },
+    { name: '水', value: 20 },
+    { name: '火', value: 75 },
+    { name: '土', value: 45 },
+  ];
+
+  const maxValue = 100;
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.hero}>
-        <Text style={styles.heroTitle}>Welcome to Hex64</Text>
-        <Text style={styles.heroSubtitle}>A modern mobile application</Text>
-      </View>
-
-      <View style={styles.features}>
-        <View style={styles.featureCard}>
-          <Text style={styles.featureIcon}>🚀</Text>
-          <Text style={styles.featureTitle}>快速开发</Text>
-          <Text style={styles.featureDesc}>
-            使用 React Native 和 Expo，提供流畅的开发体验
-          </Text>
-        </View>
-
-        <View style={styles.featureCard}>
-          <Text style={styles.featureIcon}>📱</Text>
-          <Text style={styles.featureTitle}>跨平台</Text>
-          <Text style={styles.featureDesc}>
-            一套代码，同时支持 iOS 和 Android 系统
-          </Text>
-        </View>
-
-        <View style={styles.featureCard}>
-          <Text style={styles.featureIcon}>🛣️</Text>
-          <Text style={styles.featureTitle}>路由管理</Text>
-          <Text style={styles.featureDesc}>
-            内置 expo-router，轻松管理页面导航
-          </Text>
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Text style={styles.headerTitle}>八字排盘</Text>
+          <View style={styles.headerIcons}>
+            <MaterialCommunityIcons name="history" size={22} color="#78716c" style={{ marginRight: 16 }} />
+            <MaterialCommunityIcons name="share-variant-outline" size={22} color="#78716c" />
+          </View>
         </View>
       </View>
 
-      <View style={styles.quickLinks}>
-        <Text style={styles.sectionTitle}>快速链接</Text>
-        <Link href="/dashboard" asChild>
-          <TouchableOpacity style={styles.linkButton}>
-            <Text style={styles.linkText}>控制面板 →</Text>
-          </TouchableOpacity>
-        </Link>
-        <Link href="/about" asChild>
-          <TouchableOpacity style={styles.linkButton}>
-            <Text style={styles.linkText}>关于我们 →</Text>
-          </TouchableOpacity>
-        </Link>
-      </View>
+      {/* Content */}
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* 八字卡片 */}
+        <View style={styles.card}>
+          <View style={styles.birthRow}>
+            <Text style={styles.birthLabel}>出生日期</Text>
+            <Text style={styles.birthValue}>2026年02月05日 10:30</Text>
+          </View>
+          <View style={styles.pillarsGrid}>
+            {pillars.map((pillar, index) => (
+              <View key={index} style={styles.pillarItem}>
+                <Text style={styles.pillarLabel}>{pillar.name}</Text>
+                <Text style={[styles.pillarGanZhi, { color: pillar.color }]}>{pillar.ganZhi}</Text>
+                <Text style={[styles.pillarWuxing, { color: pillar.color }]}>{pillar.wuxing}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>© 2026 Hex64 App. All rights reserved.</Text>
-      </View>
-    </ScrollView>
+        {/* 五行强弱 */}
+        <View style={styles.card}>
+          <View style={styles.sectionTitle}>
+            <View style={styles.titleIndicator} />
+            <Text style={styles.sectionTitleText}>五行强弱</Text>
+          </View>
+          
+          {/* 雷达图替代 - 横向柱状图 */}
+          <View style={styles.wuxingChart}>
+            {wuxingData.map((item, index) => (
+              <View key={index} style={styles.wuxingItem}>
+                <Text style={styles.wuxingLabel}>{item.name}</Text>
+                <View style={styles.progressContainer}>
+                  <View style={[styles.progressBar, { width: `${item.value}%` }]} />
+                </View>
+                <Text style={styles.wuxingValue}>{item.value}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* 每日建议 */}
+        <View style={styles.adviceCard}>
+          <Text style={styles.adviceText}>
+            "今日庚金坐子，水气较重。宜稳守，不宜大动干戈。"
+          </Text>
+        </View>
+
+        <View style={{ height: 100 }} />
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#242424',
+    backgroundColor: '#f5f5f4',
   },
-  hero: {
-    backgroundColor: '#667eea',
-    paddingVertical: 60,
+  header: {
+    backgroundColor: '#fff',
+    paddingTop: 50,
+    paddingBottom: 12,
     paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e7e5e4',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  heroTitle: {
-    fontSize: 32,
+  headerTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 8,
+    color: '#1c1917',
+    letterSpacing: 2,
   },
-  heroSubtitle: {
-    fontSize: 18,
-    color: 'rgba(255,255,255,0.9)',
+  headerIcons: {
+    flexDirection: 'row',
   },
-  features: {
-    padding: 20,
+  content: {
+    flex: 1,
+    padding: 16,
   },
-  featureCard: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    padding: 20,
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 16,
     marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
-  featureIcon: {
-    fontSize: 40,
+  birthRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f5f5f4',
+    paddingBottom: 12,
     marginBottom: 12,
   },
-  featureTitle: {
-    fontSize: 20,
+  birthLabel: {
+    fontSize: 14,
+    color: '#a8a29e',
+  },
+  birthValue: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1c1917',
+  },
+  pillarsGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 8,
+  },
+  pillarItem: {
+    alignItems: 'center',
+  },
+  pillarLabel: {
+    fontSize: 12,
+    color: '#a8a29e',
+    marginBottom: 4,
+  },
+  pillarGanZhi: {
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#646cff',
-    marginBottom: 8,
   },
-  featureDesc: {
-    fontSize: 15,
-    color: 'rgba(255,255,255,0.7)',
-    lineHeight: 22,
-  },
-  quickLinks: {
-    padding: 20,
+  pillarWuxing: {
+    fontSize: 10,
+    marginTop: 2,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 16,
   },
-  linkButton: {
-    backgroundColor: '#1a1a1a',
+  titleIndicator: {
+    width: 4,
+    height: 16,
+    backgroundColor: '#b45309',
+    borderRadius: 2,
+    marginRight: 8,
+  },
+  sectionTitleText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1c1917',
+  },
+  wuxingChart: {
+    gap: 12,
+  },
+  wuxingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  wuxingLabel: {
+    width: 24,
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#1c1917',
+  },
+  progressContainer: {
+    flex: 1,
+    height: 12,
+    backgroundColor: '#f5f5f4',
+    borderRadius: 6,
+    marginHorizontal: 12,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#b45309',
+    borderRadius: 6,
+  },
+  wuxingValue: {
+    width: 30,
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#b45309',
+    textAlign: 'right',
+  },
+  adviceCard: {
+    backgroundColor: '#fef3c7',
     borderRadius: 12,
     padding: 16,
-    marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: '#fde68a',
   },
-  linkText: {
-    fontSize: 16,
-    color: '#646cff',
-    fontWeight: '600',
-  },
-  footer: {
-    padding: 20,
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-    marginTop: 20,
-  },
-  footerText: {
+  adviceText: {
     fontSize: 14,
-    color: 'rgba(255,255,255,0.5)',
+    color: '#78350f',
+    lineHeight: 22,
+    fontStyle: 'italic',
   },
 });

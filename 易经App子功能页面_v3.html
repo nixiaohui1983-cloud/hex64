@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>易经App子功能页面</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.3s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen p-8">
+<!-- APP Container -->
+<div class="w-[375px] h-[812px] bg-stone-50 border-[8px] border-slate-800 rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col scale-100">
+<!-- Status Bar Simulation -->
+<div class="h-6 w-full px-6 pt-2 flex justify-between items-center text-[10px] font-bold text-slate-400">
+<span>09:41</span>
+<div class="flex gap-1.5">
+<span class="iconify" data-icon="mdi:signal"></span>
+<span class="iconify" data-icon="mdi:wifi"></span>
+<span class="iconify" data-icon="mdi:battery"></span>
+</div>
+</div>
+<!-- Header -->
+<header class="h-14 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-stone-200">
+<h1 class="text-xl font-bold text-stone-800 tracking-wider" id="page-title">八字算命</h1>
+<div class="flex gap-4 text-stone-600">
+<span class="iconify text-xl" data-icon="mdi:history"></span>
+<span class="iconify text-xl" data-icon="mdi:share-variant-outline"></span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto hide-scrollbar bg-stone-50 pb-20" id="content-area">
+<!-- Page 1: 八字 (Default) -->
+<section class="p-5 space-y-6" id="page-bazi">
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100 space-y-4">
+<div class="flex justify-between items-center border-b border-stone-50 pb-3">
+<span class="text-stone-400 text-sm">出生日期</span>
+<span class="text-stone-800 font-medium">2026年02月05日 10:30</span>
+</div>
+<div class="grid grid-cols-4 gap-2 py-4 text-center">
+<div class="space-y-1">
+<div class="text-xs text-stone-400">年柱</div>
+<div class="text-2xl font-bold text-amber-800">丙午</div>
+<div class="text-[10px] text-amber-600">火火</div>
+</div>
+<div class="space-y-1">
+<div class="text-xs text-stone-400">月柱</div>
+<div class="text-2xl font-bold text-amber-800">庚寅</div>
+<div class="text-[10px] text-green-600">金木</div>
+</div>
+<div class="space-y-1">
+<div class="text-xs text-stone-400">日柱</div>
+<div class="text-2xl font-bold text-amber-800">庚子</div>
+<div class="text-[10px] text-blue-600">金水</div>
+</div>
+<div class="space-y-1">
+<div class="text-xs text-stone-400">时柱</div>
+<div class="text-2xl font-bold text-amber-800">辛巳</div>
+<div class="text-[10px] text-amber-600">金火</div>
+</div>
+</div>
+</div>
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
+<h3 class="text-stone-800 font-bold mb-4 flex items-center gap-2">
+<span class="w-1 h-4 bg-amber-600 rounded-full"></span>五行强弱
+          </h3>
+<div class="w-full h-48" id="chart-wuxing"></div>
+</div>
+<div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
+<p class="text-sm text-amber-900 leading-relaxed italic">
+            "今日庚金坐子，水气较重。宜稳守，不宜大动干戈。"
+          </p>
+</div>
+</section>
+<!-- Page 2: 取名 (Hidden) -->
+<section class="hidden p-5 space-y-6" id="page-quming">
+<div class="bg-white p-6 rounded-3xl shadow-sm border border-stone-100 space-y-5">
+<div class="grid grid-cols-2 gap-3">
+<div class="space-y-2">
+<label class="text-xs text-stone-400 font-bold uppercase tracking-widest pl-1">姓氏 <span class="text-[10px] font-normal opacity-60">(可选/Optional)</span></label>
+<input class="w-full bg-stone-50 border-0 rounded-xl px-4 py-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all text-sm" placeholder="Surname" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs text-stone-400 font-bold uppercase tracking-widest pl-1">原名 <span class="text-[10px] font-normal opacity-60">(Original Name)</span></label>
+<input class="w-full bg-stone-50 border-0 rounded-xl px-4 py-3 focus:ring-2 focus:ring-amber-500 outline-none transition-all text-sm" placeholder="e.g. David / 张三" type="text"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs text-stone-400 font-bold uppercase tracking-widest pl-1">出生时间 (Birth Date &amp; Time)</label>
+<div class="flex gap-1 overflow-x-auto hide-scrollbar no-wrap bg-stone-50 p-2 rounded-xl">
+<select class="bg-transparent border-none text-sm focus:ring-0 cursor-pointer"><option>2026年</option><option>2025年</option></select>
+<select class="bg-transparent border-none text-sm focus:ring-0 cursor-pointer"><option>02月</option><option>01月</option></select>
+<select class="bg-transparent border-none text-sm focus:ring-0 cursor-pointer"><option>05日</option><option>04日</option></select>
+<select class="bg-transparent border-none text-sm focus:ring-0 cursor-pointer"><option>10时</option><option>11时</option></select>
+<select class="bg-transparent border-none text-sm focus:ring-0 cursor-pointer"><option>30分</option><option>31分</option></select>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 py-3 px-4 bg-amber-700 text-white rounded-xl font-bold shadow-lg shadow-amber-200 text-sm">男孩名 (Male)</button>
+<button class="flex-1 py-3 px-4 bg-stone-100 text-stone-500 rounded-xl font-bold text-sm">女孩名 (Female)</button>
+</div>
+<button class="w-full py-4 bg-stone-800 text-amber-100 rounded-2xl font-bold text-lg tracking-widest">智能测选 Generate</button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white p-4 rounded-2xl border border-stone-100 text-center space-y-2">
+<div class="text-3xl font-serif text-stone-800">承泽</div>
+<div class="text-xs text-stone-400 italic">瑞气承传，恩泽深厚</div>
+<div class="bg-amber-50 text-amber-700 text-[10px] py-1 rounded-full px-2">契合度 98%</div>
+</div>
+<div class="bg-white p-4 rounded-2xl border border-stone-100 text-center space-y-2">
+<div class="text-3xl font-serif text-stone-800">煜祺</div>
+<div class="text-xs text-stone-400 italic">光辉灿烂，吉祥如意</div>
+<div class="bg-amber-50 text-amber-700 text-[10px] py-1 rounded-full px-2">契合度 95%</div>
+</div>
+</div>
+</section>
+<!-- Page 3: 卜卦 (Hidden) -->
+<section class="hidden px-5 py-8 space-y-10 text-center" id="page-bugua">
+<div class="relative py-12">
+<div class="absolute inset-0 flex justify-center items-center opacity-10">
+<span class="iconify text-[240px]" data-icon="mdi:yin-yang"></span>
+</div>
+<div class="relative z-10 space-y-6">
+<h2 class="text-2xl font-bold text-stone-800">诚心求问</h2>
+<p class="text-stone-500 text-sm px-10">静心三秒，心中默念所求之事，摇晃手机或点击下方开始卜卦</p>
+</div>
+</div>
+<div class="flex flex-col items-center gap-6">
+<div class="w-40 h-40 bg-stone-800 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
+<span class="iconify text-text-6xl text-amber-400" data-icon="mdi:hand-wave"></span>
+</div>
+<button class="px-10 py-4 bg-white border-2 border-stone-800 text-stone-800 rounded-full font-bold shadow-lg hover:bg-stone-800 hover:text-white transition-all">
+            开始摇卦
+          </button>
+</div>
+<div class="flex justify-center gap-2">
+<div class="w-2 h-2 rounded-full bg-stone-300"></div>
+<div class="w-2 h-2 rounded-full bg-stone-300"></div>
+<div class="w-8 h-2 rounded-full bg-amber-600"></div>
+</div>
+</section>
+<!-- Page 4: 学易 (Hidden) -->
+<section class="hidden p-5 space-y-6" id="page-xueyi">
+<div class="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
+<button class="whitespace-nowrap px-4 py-1.5 bg-stone-800 text-amber-100 rounded-full text-sm font-bold flex items-center gap-1 shadow-sm" onclick="switchTab('bazi')">
+<span class="iconify" data-icon="mdi:calculator-variant"></span>八字测算
+</button>
+<span class="whitespace-nowrap px-4 py-1.5 bg-amber-700 text-white rounded-full text-sm">热门经典</span>
+<span class="whitespace-nowrap px-4 py-1.5 bg-white text-stone-500 rounded-full text-sm border border-stone-100">入门基础</span>
+<span class="whitespace-nowrap px-4 py-1.5 bg-white text-stone-500 rounded-full text-sm border border-stone-100">进阶提升</span>
+<span class="whitespace-nowrap px-4 py-1.5 bg-white text-stone-500 rounded-full text-sm border border-stone-100">名家解惑</span>
+</div>
+<div class="space-y-4">
+<div class="bg-white p-4 rounded-2xl flex gap-4 shadow-sm">
+<img alt="Yi Jing Class" class="w-20 h-24 object-cover rounded-lg bg-stone-100" id="img-1" src="https://modao.cc/agent-py/media/generated_images/2026-02-05/6c5ea08b7cc94ff6b5684686cf0f106c.jpg"/>
+<div class="flex-1 flex flex-col justify-between py-1">
+<div class="space-y-1">
+<h4 class="font-bold text-stone-800">《周易》基础入门详解</h4>
+<p class="text-xs text-stone-400">主讲：陈国兴 教授</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded">1.2万人在学</span>
+<span class="text-stone-800 font-bold">免费</span>
+</div>
+</div>
+</div>
+<div class="bg-white p-4 rounded-2xl flex gap-4 shadow-sm">
+<img alt="Ba Gua Deep Dive" class="w-20 h-24 object-cover rounded-lg bg-stone-100" id="img-2" src="https://modao.cc/agent-py/media/generated_images/2026-02-05/8a1eaea7a429443987c13fdf07cb63eb.jpg"/>
+<div class="flex-1 flex flex-col justify-between py-1">
+<div class="space-y-1">
+<h4 class="font-bold text-stone-800">梅花易数：实战解析</h4>
+<p class="text-xs text-stone-400">主讲：自得居士</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded">4852人在学</span>
+<span class="text-amber-800 font-bold">¥198</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Page 5: 我的 (Hidden) -->
+<section class="hidden" id="page-mine">
+<div class="bg-gradient-to-b from-stone-800 to-stone-900 h-44 px-6 pt-10 flex items-center gap-4">
+<div class="w-16 h-16 rounded-full border-2 border-amber-400/30 overflow-hidden bg-white/10 p-1">
+<div class="w-full h-full rounded-full bg-amber-500 flex items-center justify-center">
+<span class="iconify text-white text-3xl" data-icon="mdi:account"></span>
+</div>
+</div>
+<div class="text-white space-y-1">
+<h3 class="text-lg font-bold">易友_2402</h3>
+<p class="text-xs text-amber-400/80">潜龙在渊 · 活跃会员</p>
+</div>
+</div>
+<div class="px-5 -mt-8 space-y-5">
+<div class="bg-white p-4 rounded-2xl shadow-sm flex justify-around text-center border border-stone-100">
+<div class="space-y-1">
+<div class="text-lg font-bold text-stone-800">12</div>
+<div class="text-[10px] text-stone-400">我的测算</div>
+</div>
+<div class="w-px h-8 bg-stone-100 my-auto"></div>
+<div class="space-y-1">
+<div class="text-lg font-bold text-stone-800">5</div>
+<div class="text-[10px] text-stone-400">已购课程</div>
+</div>
+<div class="w-px h-8 bg-stone-100 my-auto"></div>
+<div class="space-y-1">
+<div class="text-lg font-bold text-stone-800">86</div>
+<div class="text-[10px] text-stone-400">积分余额</div>
+</div>
+</div>
+<div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+<div class="p-4 border-b border-stone-50 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="iconify text-stone-400 text-lg" data-icon="mdi:book-open-variant"></span>
+<span class="text-sm font-medium text-stone-700">阅读历史</span>
+</div>
+<span class="iconify text-stone-300" data-icon="mdi:chevron-right"></span>
+</div>
+<div class="p-4 border-b border-stone-50 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="iconify text-stone-400 text-lg" data-icon="mdi:star-outline"></span>
+<span class="text-sm font-medium text-stone-700">我的收藏</span>
+</div>
+<span class="iconify text-stone-300" data-icon="mdi:chevron-right"></span>
+</div>
+<div class="p-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="iconify text-stone-400 text-lg" data-icon="mdi:cog-outline"></span>
+<span class="text-sm font-medium text-stone-700">系统设置</span>
+</div>
+<span class="iconify text-stone-300" data-icon="mdi:chevron-right"></span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Bar -->
+<nav class="absolute bottom-0 w-full h-[80px] bg-white/90 backdrop-blur-xl border-t border-stone-200 flex justify-around items-center px-4 pb-4">
+<button class="nav-item flex flex-col items-center gap-1 text-amber-700" id="nav-bazi" onclick="switchTab('bazi')">
+<span class="iconify text-2xl" data-icon="mdi:calendar-text-outline"></span>
+<span class="text-[10px] font-bold">八字</span>
+</button>
+<button class="nav-item flex flex-col items-center gap-1 text-stone-400" id="nav-quming" onclick="switchTab('quming')">
+<span class="iconify text-2xl" data-icon="mdi:signature-freehand"></span>
+<span class="text-[10px] font-medium">取名</span>
+</button>
+<button class="nav-item flex flex-col items-center gap-1 text-stone-400" id="nav-bugua" onclick="switchTab('bugua')">
+<div class="w-12 h-12 bg-stone-800 rounded-full -mt-6 flex items-center justify-center shadow-lg shadow-stone-300">
+<span class="iconify text-2xl text-amber-400" data-icon="mdi:yin-yang"></span>
+</div>
+<span class="text-[10px] font-medium">卜卦</span>
+</button>
+<button class="nav-item flex flex-col items-center gap-1 text-stone-400" id="nav-xueyi" onclick="switchTab('xueyi')">
+<span class="iconify text-2xl" data-icon="mdi:book-open-page-variant-outline"></span>
+<span class="text-[10px] font-medium">学易</span>
+</button>
+<button class="nav-item flex flex-col items-center gap-1 text-stone-400" id="nav-mine" onclick="switchTab('mine')">
+<span class="iconify text-2xl" data-icon="mdi:account-outline"></span>
+<span class="text-[10px] font-medium">我的</span>
+</button>
+</nav>
+</div>
+<script>
+    function switchTab(tabId) {
+      // Titles Map
+      const titles = {
+        'bazi': '八字排盘',
+        'quming': '智能取名',
+        'bugua': '周易卜卦',
+        'xueyi': '深度学易',
+        'mine': '个人中心'
+      };
+
+      // Hide all pages
+      const pages = ['bazi', 'quming', 'bugua', 'xueyi', 'mine'];
+      pages.forEach(p => {
+        document.getElementById(`page-${p}`).classList.add('hidden');
+        const nav = document.getElementById(`nav-${p}`);
+        nav.classList.remove('text-amber-700');
+        nav.classList.add('text-stone-400');
+        nav.querySelector('span:last-child').classList.remove('font-bold');
+        nav.querySelector('span:last-child').classList.add('font-medium');
+      });
+
+      // Show specific page
+      const activePage = document.getElementById(`page-${tabId}`);
+      activePage.classList.remove('hidden');
+      activePage.classList.add('animate-slide-in');
+      
+      // Update Title
+      document.getElementById('page-title').innerText = titles[tabId];
+
+      // Update Nav Style
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      activeNav.classList.remove('text-stone-400');
+      activeNav.classList.add('text-amber-700');
+      activeNav.querySelector('span:last-child').classList.add('font-bold');
+
+      // Re-init chart if on bazi page
+      if(tabId === 'bazi') initChart();
+    }
+
+    function initChart() {
+      const chartDom = document.getElementById('chart-wuxing');
+      if (!chartDom) return;
+      
+      const myChart = echarts.init(chartDom);
+      const option = {
+        radar: {
+          indicator: [
+            { name: '金', max: 100 },
+            { name: '木', max: 100 },
+            { name: '水', max: 100 },
+            { name: '火', max: 100 },
+            { name: '土', max: 100 }
+          ],
+          shape: 'circle',
+          splitArea: { show: false },
+          axisLine: { lineStyle: { color: '#e5e7eb' } }
+        },
+        series: [{
+          type: 'radar',
+          data: [{
+            value: [85, 40, 20, 75, 45],
+            name: '五行分布',
+            areaStyle: { color: 'rgba(180, 83, 9, 0.4)' },
+            lineStyle: { color: '#b45309' },
+            itemStyle: { color: '#b45309' }
+          }]
+        }]
+      };
+      myChart.setOption(option);
+    }
+
+    // Initial chart load
+    document.addEventListener('DOMContentLoaded', initChart);
+  </script>
+</body>
+</html>
