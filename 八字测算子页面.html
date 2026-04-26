@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>八字测算 - 命理乾坤</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes slideInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-up { animation: slideInUp 0.5s ease-out forwards; }
+  </style>
+</head>
+<body class="bg-slate-50 flex justify-center items-center min-h-screen">
+<!-- APP Container -->
+<div class="w-[375px] h-[812px] bg-white border border-slate-200 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col">
+<!-- Header: 56px -->
+<header class="h-[56px] flex items-center justify-between px-4 border-b border-slate-100 bg-white sticky top-0 z-50">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-50 transition-colors">
+<span class="iconify text-2xl text-slate-700" data-icon="hugeicons:arrow-left-01"></span>
+</button>
+<h1 class="text-lg font-bold text-slate-800">八字精批</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-50 transition-colors">
+<span class="iconify text-2xl text-slate-700" data-icon="hugeicons:share-01"></span>
+</button>
+</header>
+<!-- Main Content: 676px (812-56-80) -->
+<main class="flex-1 overflow-y-auto hide-scrollbar bg-slate-50">
+<!-- Input Section -->
+<section class="p-5 space-y-4">
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+<div class="flex items-center space-x-2 mb-4">
+<span class="iconify text-indigo-500 text-xl" data-icon="hugeicons:calendar-03"></span>
+<span class="font-semibold text-slate-800">个人信息录入</span>
+</div>
+<div class="space-y-4">
+<!-- Gender Selection -->
+<div class="flex gap-4">
+<label class="flex-1 cursor-pointer group">
+<input checked="" class="hidden peer" name="gender" type="radio" value="male"/>
+<div class="flex items-center justify-center py-3 rounded-xl border-2 border-slate-100 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 group-hover:bg-slate-50 transition-all">
+<span class="iconify text-indigo-500 mr-2" data-icon="hugeicons:male"></span>
+<span class="text-slate-600 peer-checked:text-indigo-700 font-medium">乾造 (男)</span>
+</div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="hidden peer" name="gender" type="radio" value="female"/>
+<div class="flex items-center justify-center py-3 rounded-xl border-2 border-slate-100 peer-checked:border-rose-500 peer-checked:bg-rose-50 group-hover:bg-slate-50 transition-all">
+<span class="iconify text-rose-500 mr-2" data-icon="hugeicons:female"></span>
+<span class="text-slate-600 peer-checked:text-rose-700 font-medium">坤造 (女)</span>
+</div>
+</label>
+</div>
+<!-- Date Selection Mockup -->
+<div class="space-y-3">
+<div class="relative">
+<input class="w-full bg-slate-50 border-0 rounded-xl px-4 py-4 text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 outline-none" readonly="" type="text" value="2026年02月05日"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 iconify text-slate-400" data-icon="hugeicons:calendar-download-01"></span>
+</div>
+<div class="relative">
+<input class="w-full bg-slate-50 border-0 rounded-xl px-4 py-4 text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 outline-none" readonly="" type="text" value="子时 (23:00 - 01:00)"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 iconify text-slate-400" data-icon="hugeicons:clock-01"></span>
+</div>
+</div>
+<button class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-100 active:scale-95 transition-transform" onclick="calculate()">
+              开始遣支测算
+            </button>
+</div>
+</div>
+</section>
+<!-- Results Section (Hidden initially, shown after click) -->
+<section class="p-5 space-y-6 animate-slide-up hidden pb-10" id="results">
+<!-- Module 1: 基础框架 -->
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-slate-800 flex items-center">
+<span class="w-1.5 h-6 bg-indigo-500 rounded-full mr-2"></span>
+              先天命盘布局
+            </h3>
+<span class="text-xs text-slate-400">2026年02月05日 23时</span>
+</div>
+<div class="grid grid-cols-4 gap-2 text-center">
+<div class="bg-slate-50 p-2 rounded-lg">
+<div class="text-xs text-slate-500 mb-1">年柱</div>
+<div class="font-bold text-rose-600 text-lg">丙午</div>
+</div>
+<div class="bg-slate-50 p-2 rounded-lg">
+<div class="text-xs text-slate-500 mb-1">月柱</div>
+<div class="font-bold text-amber-600 text-lg">庚寅</div>
+</div>
+<div class="bg-slate-50 p-2 rounded-lg border-2 border-indigo-200">
+<div class="text-xs text-indigo-500 mb-1">日主</div>
+<div class="font-bold text-indigo-700 text-lg">庚申</div>
+</div>
+<div class="bg-slate-50 p-2 rounded-lg">
+<div class="text-xs text-slate-500 mb-1">时柱</div>
+<div class="font-bold text-emerald-600 text-lg">丙子</div>
+</div>
+</div>
+<div class="h-48 mt-4" id="fiveElements"></div>
+</div>
+<!-- Module 2: 核心分析 -->
+<div class="bg-indigo-900 rounded-2xl p-5 text-white shadow-xl overflow-hidden relative">
+<span class="absolute -right-4 -top-4 iconify text-8xl opacity-10" data-icon="hugeicons:gold-medal"></span>
+<h3 class="font-bold mb-4 flex items-center">
+<span class="iconify mr-2" data-icon="hugeicons:analysis-text-link"></span>
+            核心格局分析
+          </h3>
+<div class="space-y-3 relative z-10">
+<div class="bg-white/10 rounded-lg p-3 backdrop-blur-md border border-white/20">
+<p class="text-sm font-medium opacity-80">日主能量：<span class="text-amber-300 font-bold text-lg">身强</span></p>
+<p class="text-xs mt-1 leading-relaxed opacity-70">天干庚金生于寅月，得月令之助，地支申金强根支持。</p>
+</div>
+<div class="bg-white/10 rounded-lg p-3 backdrop-blur-md border border-white/20">
+<p class="text-sm font-medium opacity-80">格神局象：<span class="text-indigo-200 font-bold text-lg">正官格</span></p>
+<p class="text-xs mt-1 leading-relaxed opacity-70">格局高远，天生具备领导力与责任感，适合考取功名。</p>
+</div>
+</div>
+</div>
+<!-- Module 3: 人生领域 -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-3">
+<span class="iconify text-2xl" data-icon="hugeicons:money-send-01"></span>
+</div>
+<h4 class="font-bold text-slate-800 text-sm">财运财富</h4>
+<p class="text-xs text-slate-500 mt-1">正财稳固，偏财隐约，晚年财丰。</p>
+</div>
+<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mb-3">
+<span class="iconify text-2xl" data-icon="hugeicons:favourite"></span>
+</div>
+<h4 class="font-bold text-slate-800 text-sm">婚姻感情</h4>
+<p class="text-xs text-slate-500 mt-1">配偶宫坐禄，伴侣能干，感情和谐。</p>
+</div>
+</div>
+<!-- Module 4: 动态运势 -->
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+<h3 class="font-bold text-slate-800 mb-4 flex items-center">
+<span class="iconify text-amber-500 mr-2" data-icon="hugeicons:chart-bar-01"></span>
+            2026-2035 十年大运
+          </h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between border-l-4 border-amber-400 pl-3">
+<div>
+<p class="font-bold text-slate-800">丁卯大运</p>
+<p class="text-xs text-slate-500">2026年 - 2035年</p>
+</div>
+<span class="bg-amber-100 text-amber-700 text-[10px] px-2 py-1 rounded-full font-bold">转折机遇期</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl italic">
+              "此运木火相生，利于官场晋升，职场表现亮眼，但需注意心脏与肝脏负荷。"
+            </p>
+</div>
+</div>
+<!-- Module 5: 辅助参考 -->
+<div class="bg-slate-100 rounded-2xl p-5 border border-dashed border-slate-300">
+<h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center">
+<span class="iconify mr-2" data-icon="hugeicons:star"></span>
+            神煞与建议
+          </h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-white text-indigo-600 rounded-lg text-xs font-medium border border-indigo-100">天乙贵人</span>
+<span class="px-3 py-1 bg-white text-amber-600 rounded-lg text-xs font-medium border border-amber-100">文昌入命</span>
+<span class="px-3 py-1 bg-white text-rose-600 rounded-lg text-xs font-medium border border-rose-100">红鸾星动</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex gap-3 mt-4">
+<button class="flex-1 flex flex-col items-center py-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
+<span class="iconify text-xl text-slate-600 mb-1" data-icon="hugeicons:floppy-disk"></span>
+<span class="text-[10px] font-medium text-slate-600">保存记录</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
+<span class="iconify text-xl text-slate-600 mb-1" data-icon="hugeicons:mail-at-sign-01"></span>
+<span class="text-[10px] font-medium text-slate-600">发至邮箱</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
+<span class="iconify text-xl text-slate-600 mb-1" data-icon="hugeicons:share-01"></span>
+<span class="text-[10px] font-medium text-slate-600">分享好友</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Navigation Bar: 80px -->
+<footer class="h-[80px] bg-white border-t border-slate-100 flex items-center justify-around px-4">
+<button class="flex flex-col items-center space-y-1 text-slate-400">
+<span class="iconify text-2xl" data-icon="hugeicons:home-01"></span>
+<span class="text-[10px]">主页</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-indigo-600 font-bold">
+<span class="iconify text-2xl" data-icon="hugeicons:compass"></span>
+<span class="text-[10px]">测算</span>
+</button>
+<div class="flex flex-col items-center -mt-8">
+<div class="w-14 h-14 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-full shadow-lg border-4 border-white flex items-center justify-center text-white">
+<span class="iconify text-2xl" data-icon="hugeicons:add-01"></span>
+</div>
+<span class="text-[10px] mt-1 text-indigo-600 font-bold">新测算</span>
+</div>
+<button class="flex flex-col items-center space-y-1 text-slate-400">
+<span class="iconify text-2xl" data-icon="hugeicons:chat-bubble-01"></span>
+<span class="text-[10px]">社区</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-slate-400">
+<span class="iconify text-2xl" data-icon="hugeicons:user"></span>
+<span class="text-[10px]">我的</span>
+</button>
+</footer>
+<!-- Placeholders for images/logos -->
+<img alt="Traditional Astrology Art" class="hidden" id="img1" src="https://modao.cc/agent-py/media/generated_images/2026-02-05/0de6ce50169a428094af90b46aeba10e.jpg"/>
+</div>
+<script>
+    function calculate() {
+      const results = document.getElementById('results');
+      results.classList.remove('hidden');
+      
+      // Scroll to top of results
+      results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      
+      // Initialize ECharts
+      initChart();
+    }
+
+    function initChart() {
+      const chartDom = document.getElementById('fiveElements');
+      const myChart = echarts.init(chartDom);
+      const option = {
+        title: {
+          text: '五行分布能量图',
+          textStyle: { fontSize: 12, color: '#64748b' },
+          left: 'center'
+        },
+        radar: {
+          indicator: [
+            { name: '金', max: 100 },
+            { name: '木', max: 100 },
+            { name: '水', max: 100 },
+            { name: '火', max: 100 },
+            { name: '土', max: 100 }
+          ],
+          shape: 'circle',
+          splitNumber: 4,
+          axisName: { color: '#94a3b8' },
+          splitLine: { lineStyle: { color: 'rgba(99, 102, 241, 0.1)' } },
+          splitArea: { areaStyle: { color: ['#f8fafc', '#f1f5f9'] } }
+        },
+        series: [{
+          type: 'radar',
+          data: [{
+            value: [85, 40, 20, 65, 30],
+            name: '五行能量',
+            areaStyle: { color: 'rgba(99, 102, 241, 0.4)' },
+            lineStyle: { color: '#6366f1' },
+            itemStyle: { color: '#6366f1' }
+          }]
+        }]
+      };
+      myChart.setOption(option);
+    }
+  </script>
+</body>
+</html>
