@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>摇卦结果分析报告</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulse-gold {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .animate-pulse-gold { animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .gua-line-yang { height: 8px; width: 100%; background: #B45309; border-radius: 4px; }
+    .gua-line-yin { height: 8px; width: 100%; display: flex; justify-content: space-between; }
+    .gua-line-yin div { height: 8px; width: 45%; background: #D97706; border-radius: 4px; }
+    .gua-line-change { border: 2px solid #EF4444; position: relative; }
+    .gua-line-change::after { content: '×'; position: absolute; right: -25px; top: -8px; color: #EF4444; font-weight: bold; }
+  </style>
+</head>
+<body class="bg-stone-100 flex justify-center py-10">
+<!-- APP Container -->
+<div class="w-[375px] h-[812px] bg-white border border-stone-200 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col">
+<!-- Header: 标题栏 (56px) -->
+<header class="h-[56px] flex items-center justify-between px-4 bg-stone-800 text-stone-100 shrink-0 z-10">
+<button class="p-1 hover:bg-stone-700 rounded-full transition-colors">
+<span class="iconify text-2xl" data-icon="solar:alt-arrow-left-linear"></span>
+</button>
+<h1 class="text-lg font-medium tracking-widest">卦象分析报告</h1>
+<button class="p-1 hover:bg-stone-700 rounded-full transition-colors">
+<span class="iconify text-2xl" data-icon="solar:share-linear"></span>
+</button>
+</header>
+<!-- Content: 内容区 (676px) -->
+<main class="h-[676px] overflow-y-auto hide-scrollbar bg-stone-50 pb-10">
+<!-- 基础信息卡片 -->
+<section class="p-4">
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-stone-200">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded-full font-medium">求测事项：投资吉凶</span>
+<span class="text-[10px] text-stone-400">2026年02月05日</span>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm">
+<div class="flex items-center gap-2">
+<span class="iconify text-stone-400" data-icon="solar:user-linear"></span>
+<span class="text-stone-500">求测人：</span>
+<span class="text-stone-800">张先生</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-stone-400" data-icon="solar:calendar-date-linear"></span>
+<span class="text-stone-500">干支：</span>
+<span class="text-stone-800">丙午年 庚寅月</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 卦盘展示区 -->
+<section class="px-4 mb-6">
+<div class="bg-stone-900 rounded-2xl p-6 text-stone-100 relative overflow-hidden">
+<div class="flex justify-between items-center mb-8 relative z-10">
+<div class="text-center w-1/3">
+<p class="text-xs text-stone-400 mb-2">本卦</p>
+<h3 class="text-xl font-bold text-amber-400">火地晋</h3>
+</div>
+<div class="iconify text-stone-600 text-2xl" data-icon="solar:transfer-horizontal-bold"></div>
+<div class="text-center w-1/3">
+<p class="text-xs text-stone-400 mb-2">变卦</p>
+<h3 class="text-xl font-bold text-stone-200">火风鼎</h3>
+</div>
+</div>
+<!-- 卦爻结构 -->
+<div class="flex justify-between gap-8 mb-4">
+<!-- 本卦描绘 -->
+<div class="flex-1 space-y-3">
+<div class="gua-line-yang"></div>
+<div class="gua-line-yin"><div></div><div></div></div>
+<div class="gua-line-yang"></div>
+<div class="gua-line-yin"><div></div><div></div></div>
+<div class="gua-line-yin gua-line-change"><div></div><div></div></div>
+<div class="gua-line-yin"><div></div><div></div></div>
+</div>
+<!-- 变卦描绘 -->
+<div class="flex-1 space-y-3">
+<div class="gua-line-yang"></div>
+<div class="gua-line-yin"><div></div><div></div></div>
+<div class="gua-line-yang"></div>
+<div class="gua-line-yang"></div>
+<div class="gua-line-yang"></div>
+<div class="gua-line-yin"><div></div><div></div></div>
+</div>
+</div>
+<div class="text-[10px] text-center text-stone-500 uppercase tracking-widest mt-4">
+            世爻在四 · 应爻在初
+          </div>
+<div class="absolute -right-10 -bottom-10 opacity-10">
+<span class="iconify text-[180px]" data-icon="tabler:yin-yang"></span>
+</div>
+</div>
+</section>
+<!-- 六亲分布图 -->
+<section class="px-4 mb-6">
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-stone-200">
+<h4 class="text-sm font-bold border-l-4 border-amber-600 pl-2 mb-4">用神旺衰分析</h4>
+<div class="w-full h-48 focus:outline-none" id="elementChart"></div>
+<p class="text-xs text-stone-500 mt-2 leading-relaxed">
+<span class="text-amber-600 font-bold">用神（妻财）：</span> 处于旺相状态，月令生扶，财源根基稳固。
+          </p>
+</div>
+</section>
+<!-- 核心卦理分析 -->
+<section class="px-4 mb-6 space-y-4">
+<div class="bg-amber-50 rounded-2xl p-5 border border-amber-100">
+<div class="flex items-center gap-2 mb-3">
+<span class="iconify text-amber-600 text-lg" data-icon="solar:document-text-bold"></span>
+<h4 class="font-bold text-stone-800">卦辞总断</h4>
+</div>
+<p class="text-stone-700 text-sm leading-relaxed mb-2">
+            “晋：康侯用锡马蕃庶，昼日三接。”
+          </p>
+<div class="text-xs text-stone-500 bg-white/60 p-3 rounded-xl">
+            此卦象征阳光普照大地，万物进展迅速。求测投资主事业处于上升期，多得贵人照拂，利于大规模扩张。
+          </div>
+</div>
+<div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm">
+<div class="flex items-center gap-2 mb-4">
+<span class="iconify text-indigo-600 text-lg" data-icon="solar:stars-bold"></span>
+<h4 class="font-bold text-stone-800">动爻影响</h4>
+</div>
+<div class="space-y-4">
+<div class="border-b border-stone-100 pb-3">
+<span class="text-xs font-bold text-indigo-500 block mb-1">二爻动：晋如愁如</span>
+<p class="text-xs text-stone-600">提示在前进初期会有短暂的资金周转压力，心生忧虑，但坚守正道可化险为夷。</p>
+</div>
+<div>
+<span class="text-xs font-bold text-rose-500 block mb-1">应期预判</span>
+<div class="flex items-center justify-between bg-stone-50 p-3 rounded-lg">
+<div class="text-center">
+<p class="text-[10px] text-stone-400">最佳时期</p>
+<p class="text-sm font-bold text-stone-800 font-mono">辰月 / 辰日</p>
+</div>
+<div class="w-[1px] h-6 bg-stone-200"></div>
+<div class="text-center">
+<p class="text-[10px] text-stone-400">避让周期</p>
+<p class="text-sm font-bold text-stone-800 font-mono">戌月 / 戌日</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 专家建议 -->
+<section class="px-4 mb-6">
+<div class="bg-stone-800 rounded-2xl p-5 text-white shadow-lg">
+<div class="flex items-center gap-2 mb-4">
+<span class="iconify text-amber-400 text-xl animate-pulse-gold" data-icon="solar:medal-star-bold"></span>
+<h4 class="font-bold tracking-wide">专家趋避策略</h4>
+</div>
+<ul class="space-y-3">
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 shrink-0"></span>
+<p class="text-xs text-stone-300 leading-normal">建议避开与生肖属狗、属龙的人士进行直接合同签署，利于属虎贵人相助。</p>
+</li>
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 shrink-0"></span>
+<p class="text-xs text-stone-300 leading-normal">办公室东南方位可摆放常青植物以催旺子孙爻（财源）。</p>
+</li>
+<li class="flex gap-3">
+<span class="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 shrink-0"></span>
+<p class="text-xs text-stone-300 leading-normal">资金宜快进快出，切忌贪大求全，以免错失“昼日三接”之良机。</p>
+</li>
+</ul>
+</div>
+</section>
+<!-- 免责声明 -->
+<footer class="px-8 text-[10px] text-stone-400 text-center leading-relaxed italic">
+        本报告基于《周易》六爻逻辑推演，仅供参考之用。命运受多种环境因素共同影响，预测不代表必然结果，请结合实际、科学决策。
+      </footer>
+</main>
+<!-- Footer: 底部导航 (80px) -->
+<nav class="h-[80px] bg-white border-t border-stone-100 flex items-center justify-around px-2 shrink-0 z-10 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
+<div class="flex flex-col items-center gap-1 text-stone-400">
+<span class="iconify text-2xl" data-icon="solar:home-smile-linear"></span>
+<span class="text-[10px]">首页</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-amber-700">
+<div class="w-12 h-12 bg-amber-600 rounded-full flex items-center justify-center -mt-8 shadow-lg shadow-amber-200 border-4 border-white">
+<span class="iconify text-white text-2xl" data-icon="solar:magic-stick-3-bold"></span>
+</div>
+<span class="text-[10px] font-bold">解析</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-stone-400">
+<span class="iconify text-2xl" data-icon="solar:user-circle-linear"></span>
+<span class="text-[10px]">我的</span>
+</div>
+</nav>
+</div>
+<script>
+    // 初始化ECharts图表
+    document.addEventListener('DOMContentLoaded', function() {
+      const chartDom = document.getElementById('elementChart');
+      const myChart = echarts.init(chartDom);
+      const option = {
+        radar: {
+          indicator: [
+            { name: '妻财(财源)', max: 100 },
+            { name: '子孙(福神)', max: 100 },
+            { name: '官鬼(压力)', max: 100 },
+            { name: '父母(文书)', max: 100 },
+            { name: '兄弟(竞争)', max: 100 }
+          ],
+          shape: 'circle',
+          splitNumber: 4,
+          axisName: { color: '#78716c', fontSize: 10 },
+          splitArea: { areaStyle: { color: ['#fff', '#fafaf9'] } },
+          splitLine: { lineStyle: { color: '#e7e5e4' } }
+        },
+        series: [{
+          type: 'radar',
+          data: [{
+            value: [85, 70, 40, 60, 30],
+            name: '能量状态',
+            itemStyle: { color: '#D97706' },
+            areaStyle: { color: 'rgba(217, 119, 6, 0.2)' },
+            symbol: 'none'
+          }]
+        }]
+      };
+      myChart.setOption(option);
+      
+      // 窗口变化适配
+      window.addEventListener('resize', () => myChart.resize());
+    });
+  </script>
+</body>
+</html>
